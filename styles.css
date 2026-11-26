@@ -156,6 +156,14 @@ form.quote-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
 }
 .form-note { font-size: .92rem; color: var(--muted); margin-top: 12px; }
 
+/* Service area */
+.towns { columns: 2; max-width: 560px; padding-left: 1.1rem; color: var(--muted); }
+@media (max-width: 640px) { .towns { columns: 1; } }
+
+/* No-JavaScript gallery fallback */
+.noscript-sets { color: #c4d2c9; }
+.noscript-sets li { margin-bottom: 4px; }
+
 /* Footer */
 footer.site { background: var(--charcoal); color: #cfd4d0; padding: 48px 0 32px; }
 footer.site a { color: #fff; }
