@@ -23,9 +23,10 @@
   }
 
   function card(photo, set) {
-    var figure = el('figure', 'gallery-card');
+    var figure = el('figure', 'work-card');
     figure.dataset.set = set.id;
     var link = document.createElement('a');
+    link.className = 'work-photo';
     link.href = photo.src;
     link.target = '_blank';
     link.rel = 'noopener';
@@ -34,10 +35,11 @@
     img.src = photo.src;
     img.alt = 'Outback Site Services project photo — ' + set.name + ', ' + set.label + ', ' + set.display_date;
     img.loading = 'lazy';
-    var cap = el('figcaption');
-    var cat = el('span', 'cat', set.name + ' — ' + set.label);
-    var sub = el('span', 'cap', set.display_date);
-    cap.appendChild(cat);
+    img.decoding = 'async';
+    var cap = el('figcaption', 'work-caption');
+    var title = el('strong', null, set.name + ' — ' + set.label);
+    var sub = el('span', null, set.display_date);
+    cap.appendChild(title);
     cap.appendChild(sub);
     link.appendChild(img);
     figure.appendChild(link);
@@ -81,7 +83,7 @@
         if (set.pair_note) {
           section.appendChild(el('p', 'victor-note', 'Before-and-after pair: the matching ' + (set.group === 'before' ? 'after' : 'before') + ' photos are in the next section.'));
         }
-        var g = el('div', 'gallery-grid');
+        var g = el('div', 'work-grid');
         bySet[set.id].forEach(function (p) { g.appendChild(card(p, set)); });
         section.appendChild(g);
         grid.appendChild(section);
@@ -92,7 +94,7 @@
         grid.querySelectorAll('.victor-set').forEach(function (section) {
           var show = !target || target.ids.indexOf(section.dataset.set) !== -1;
           section.hidden = !show;
-          if (show) visible += section.querySelectorAll('.gallery-card').length;
+          if (show) visible += section.querySelectorAll('.work-card').length;
         });
         setCount(visible, photos.length);
       }

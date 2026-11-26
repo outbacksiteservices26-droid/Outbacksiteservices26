@@ -1,33 +1,38 @@
-// Gallery for Outback Site Services – renders cards from gallery.json
+// Our Work gallery for Outback Site Services.
+// Renders the 79 project photos from gallery.json into the original
+// work grid, using the original work-card markup. Photos are hotlinked
+// to the www host, as before.
 (function () {
-  var grid = document.getElementById('gallery-grid');
+  var grid = document.querySelector('[data-work-grid]');
+  var empty = document.querySelector('[data-work-empty]');
   var countEl = document.getElementById('gallery-count');
   var filterWrap = document.getElementById('gallery-filters');
   if (!grid) return;
 
   function card(photo) {
     var figure = document.createElement('figure');
-    figure.className = 'gallery-card';
+    figure.className = 'work-card';
     figure.dataset.category = photo.category;
     var link = document.createElement('a');
+    link.className = 'work-photo';
     link.href = photo.src;
     link.target = '_blank';
     link.rel = 'noopener';
-    link.setAttribute('aria-label', 'View full-size photo: Outback Site Services ' + photo.alt);
+    link.setAttribute('aria-label', 'View full-size photo: ' + photo.alt);
     var img = document.createElement('img');
     img.src = photo.src;
     img.alt = photo.alt;
     img.loading = 'lazy';
+    img.decoding = 'async';
     img.width = 206;
     img.height = 206;
     var cap = document.createElement('figcaption');
-    var cat = document.createElement('span');
-    cat.className = 'cat';
-    cat.textContent = photo.category;
+    cap.className = 'work-caption';
+    var title = document.createElement('strong');
+    title.textContent = photo.category;
     var sub = document.createElement('span');
-    sub.className = 'cap';
     sub.textContent = photo.caption;
-    cap.appendChild(cat);
+    cap.appendChild(title);
     cap.appendChild(sub);
     link.appendChild(img);
     figure.appendChild(link);
@@ -44,6 +49,8 @@
     .then(function (data) {
       var photos = data.photos || [];
       photos.forEach(function (p) { grid.appendChild(card(p)); });
+      if (empty) empty.hidden = true;
+      grid.hidden = false;
       setCount(photos.length, photos.length);
       // Category filter buttons
       var cats = [];
@@ -58,7 +65,7 @@
           filterWrap.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
           b.setAttribute('aria-pressed', String(!active));
           var visible = 0;
-          grid.querySelectorAll('.gallery-card').forEach(function (figure) {
+          grid.querySelectorAll('.work-card').forEach(function (figure) {
             var show = active || figure.dataset.category === cat;
             figure.hidden = !show;
             if (show) visible++;
@@ -72,12 +79,12 @@
       all.textContent = 'Show all';
       all.addEventListener('click', function () {
         filterWrap.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
-        grid.querySelectorAll('.gallery-card').forEach(function (f) { f.hidden = false; });
+        grid.querySelectorAll('.work-card').forEach(function (f) { f.hidden = false; });
         setCount(photos.length, photos.length);
       });
       filterWrap.appendChild(all);
     })
     .catch(function () {
-      grid.innerHTML = '<p>Gallery photos could not be loaded. Please try again later.</p>';
+      // Leave the "Project photos coming soon" empty state visible.
     });
 })();
